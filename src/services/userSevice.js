@@ -109,24 +109,26 @@ let createNewUser = async (data) => {
             if (check === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Email của bạn đã được sử dụng'
+                    errMessage: 'Email của bạn đã được sử dụng'
+                })
+            } else {
+                let hashPasswordFromBcrypt = await hashUserPassword(data.passWord);
+                await db.User.create({
+                    email: data.email,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    passWord: hashPasswordFromBcrypt,
+                    gender: data.gender === '1' ? true : false,
+                    phoneNumber: data.phoneNumber,
+                    roleId: data.roleId,
+                })
+
+                resolve({
+                    errCode: 0,
+                    errMessage: 'OK'
                 })
             }
-            let hashPasswordFromBcrypt = await hashUserPassword(data.passWord);
-            await db.User.create({
-                email: data.email,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                passWord: hashPasswordFromBcrypt,
-                gender: data.gender === '1' ? true : false,
-                phoneNumber: data.phoneNumber,
-                roleId: data.roleId,
-            })
 
-            resolve({
-                errCode: 0,
-                message: 'OK'
-            })
         } catch (error) {
             reject(error)
         }
@@ -194,7 +196,7 @@ let updateUserData = (data) => {
 
                 resolve({
                     errCode: 0,
-                    message: 'Sửa thành công'
+                    errMessage: 'Sửa thành công'
                 })
             } else {
                 resolve({
