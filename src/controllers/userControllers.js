@@ -62,11 +62,28 @@ let handleDeleteUser = async (req, res) => {
     return res.status(200).json(message)
 }
 
+let getAllCode = async (req, res) => {
+    try {
+        setTimeout(async () => {
+            let data = await userService.getAllCodeService(req.query.type);
+            console.log(data);
+            return res.status(200).json(data)
+        }, 1000)
+
+    } catch (error) {
+        console.log('get all code error: ' + error);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Không tìm thấy server'
+        })
+    }
+}
 
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
     handleCreateNewUser: handleCreateNewUser,
     handleEditUser: handleEditUser,
-    handleDeleteUser: handleDeleteUser
+    handleDeleteUser: handleDeleteUser,
+    getAllCode: getAllCode
 }
